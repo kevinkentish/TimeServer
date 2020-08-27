@@ -15,7 +15,11 @@ namespace TimeClient1
         static void Main(string[] args)
         {
             Console.Title = "Client";
-            LoopConnect();
+            Console.WriteLine("Enter Ip address: ");
+            string ip = Console.ReadLine();
+            IPAddress address = IPAddress.Parse(ip);
+            Console.WriteLine(address);
+            LoopConnect(address);
             SendLoop();
             Console.ReadKey();
         }
@@ -39,7 +43,7 @@ namespace TimeClient1
             }
         }
 
-        private static void LoopConnect()
+        private static void LoopConnect(IPAddress ipadd)
         {
             int attempts = 0;
             while (!_clientSocket.Connected)
@@ -47,7 +51,7 @@ namespace TimeClient1
                 try
                 {
                     attempts++;
-                    _clientSocket.Connect(IPAddress.Loopback, 100);
+                    _clientSocket.Connect(ipadd, 100);
                 }
                 catch (SocketException)
                 {

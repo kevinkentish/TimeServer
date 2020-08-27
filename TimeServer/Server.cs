@@ -17,6 +17,7 @@ namespace TimeServer
         static void Main(string[] args)
         {
             Console.Title = "Server";
+            Console.WriteLine(IPAddress.Any);
             SetupServer();
             Console.ReadKey();
         }
