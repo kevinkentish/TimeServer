@@ -29,6 +29,7 @@ namespace TimeServer
             _serverSocket.Bind(endPoint);
             _serverSocket.Listen(1);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+            Console.WriteLine("Server Setup complete!");
 
         }
 
@@ -43,29 +44,36 @@ namespace TimeServer
 
         private static void ReceiveCallBack(IAsyncResult AR)
         {
-            Socket socket = (Socket)AR.AsyncState;
-            int received = socket.EndReceive(AR);
-            byte[] dataBuf = new byte[received];
-            Array.Copy(_buffer, dataBuf,received);
-
-            string text = Encoding.ASCII.GetString(dataBuf);
-            Console.WriteLine("Text Received: " + text);
-
-            string response = string.Empty;
-
-            if (text.ToLower() != "get time")
+            try
             {
-                response = "Invalid Request";
-            }
-            else
+                Socket socket = (Socket)AR.AsyncState;
+                int received = socket.EndReceive(AR);
+                byte[] dataBuf = new byte[received];
+                Array.Copy(_buffer, dataBuf,received);
+
+                string text = Encoding.ASCII.GetString(dataBuf);
+                Console.WriteLine("Text Received: " + text);
+
+                string response = string.Empty;
+
+                if (text.ToLower() != "get time")
+                {
+                    response = "Invalid Request";
+                }
+                else
+                {
+                    response = DateTime.Now.ToLongTimeString();
+                }
+
+                byte[] data = Encoding.ASCII.GetBytes(response);
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+                socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+
+            } catch(SocketException)
             {
-                response = DateTime.Now.ToLongTimeString();
+                Console.WriteLine("Client Disconnected");
             }
-
-            byte[] data = Encoding.ASCII.GetBytes(response);
-            socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
-            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
-
+            
         }
 
         private static void SendCallback(IAsyncResult AR)
