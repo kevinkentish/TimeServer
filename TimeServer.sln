@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1209
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeServer", "TimeServer\TimeServer.csproj", "{218A0893-6C24-4C1D-BCDF-E6FBCE1B57E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LettersServer", "TimeServer\LettersServer.csproj", "{218A0893-6C24-4C1D-BCDF-E6FBCE1B57E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeClient1", "TimeClient1\TimeClient1.csproj", "{1539BDFA-EEA4-4763-8F46-B4F6AA1BA674}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LettersClient1", "TimeClient1\LettersClient1.csproj", "{1539BDFA-EEA4-4763-8F46-B4F6AA1BA674}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
