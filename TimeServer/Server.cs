@@ -39,6 +39,7 @@ namespace TimeServer
             _clientSockets.Add(socket);
             Console.WriteLine("Client Connected!");
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+            Console.WriteLine((IPEndPoint)socket.RemoteEndPoint);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
