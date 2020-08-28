@@ -20,16 +20,44 @@ namespace TimeClient1
             IPAddress address = IPAddress.Parse(ip);
             Console.WriteLine(address);
             LoopConnect(address);
+            //SendName();
             SendLoop();
+               
             Console.ReadKey();
         }
+        private static void SendName()
+        {
+            Console.Write("Input Your Name: ");
+            String Name = Console.ReadLine();
 
+            byte[] buffer = Encoding.ASCII.GetBytes(Name);
+            _clientSocket.Send(buffer);
+
+            byte[] receivedBuf = new byte[1024];
+            int rec = _clientSocket.Receive(receivedBuf);
+
+            byte[] data = new byte[rec];
+            Array.Copy(receivedBuf, data, rec);
+            Console.WriteLine("Name: " + Encoding.ASCII.GetString(data));
+        }
         private static void SendLoop()
         {
-            while (true)
+            for (int i = 6; i>0; i--)
             {
-                Console.Write("Enter a request: ");
-                string req = Console.ReadLine();
+                string req = "";
+                if (i==6)
+                {
+                    Console.WriteLine("Enter Name: ");
+                    req = Console.ReadLine();
+                    Console.WriteLine("Name is :" + req);
+
+                }else
+                {
+                    Console.WriteLine("inside");
+                    Console.Write("Vowels or Consonant: ");
+                    req = Console.ReadLine();
+                }
+                
 
                 byte[] buffer = Encoding.ASCII.GetBytes(req);
                 _clientSocket.Send(buffer);
@@ -39,8 +67,23 @@ namespace TimeClient1
 
                 byte[] data = new byte[rec];
                 Array.Copy(receivedBuf, data, rec);
-                Console.WriteLine("Received " + Encoding.ASCII.GetString(data));
+                Console.WriteLine("Letters: " + Encoding.ASCII.GetString(data));
             }
+            
+                
+                //Console.Write("Enter a request: ");
+                //string req = Console.ReadLine();
+
+                //byte[] buffer = Encoding.ASCII.GetBytes(req);
+                //_clientSocket.Send(buffer);
+
+                //byte[] receivedBuf = new byte[1024];
+                //int rec = _clientSocket.Receive(receivedBuf);
+
+                //byte[] data = new byte[rec];
+                //Array.Copy(receivedBuf, data, rec);
+                //Console.WriteLine("Score: " + Encoding.ASCII.GetString(data));
+            
         }
 
         private static void LoopConnect(IPAddress ipadd)

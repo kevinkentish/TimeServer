@@ -13,7 +13,8 @@ namespace TimeServer
         private static byte[] _buffer = new byte[1024];
         private static List<Socket> _clientSockets = new List<Socket>();
         private static Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+        private static int count = 1;
+        private static string name = "";
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -38,6 +39,7 @@ namespace TimeServer
             Socket socket = _serverSocket.EndAccept(AR);
             _clientSockets.Add(socket);
             Console.WriteLine("Client Connected!");
+            Console.WriteLine(_clientSockets[0].ToString());
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             Console.WriteLine((IPEndPoint)socket.RemoteEndPoint);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
@@ -52,19 +54,50 @@ namespace TimeServer
                 byte[] dataBuf = new byte[received];
                 Array.Copy(_buffer, dataBuf,received);
 
+
                 string text = Encoding.ASCII.GetString(dataBuf);
-                Console.WriteLine("Text Received: " + text);
-
+                Console.WriteLine("Count Before If: " + count);
                 string response = string.Empty;
+                if (count == 1)
+                {
+                    Console.WriteLine("Text Received: " + text);
+                    name = text;
+                    Console.WriteLine("Name is :" + name);
+                    Console.WriteLine("Count before increment" + count);
+                    count++;
+                    Console.WriteLine("Count after increment" + count);
+                    response = name;
+                } else
+                {
+                    Console.WriteLine("Text Received: " + text);
+                    Console.WriteLine("Name is :" + name);
 
-                if (text.ToLower() != "get time")
-                {
-                    response = "Invalid Request";
+                    response = GenerateLetter.GenerateLetters(text);
+                    //byte[] data = Encoding.ASCII.GetBytes(response);
+                    //socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+                    //socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
                 }
-                else
-                {
-                    response = DateTime.Now.ToLongTimeString();
-                }
+
+                //Console.WriteLine("Text Received: " + text);
+                //Console.WriteLine("Name is :" + name);
+
+                //bool found = CheckWord.CheckExistingWord(text);
+                
+                //string response = string.Empty;
+                //response = GenerateLetter.GenerateLetters(text);
+                //if (found == true)
+                //{
+                //    CountWords.CheckWordLenght(text);
+                //    //response = Winner.score.ToString();
+                //    response = GenerateLetter.GenerateLetters(text);
+
+                //}
+                //else
+                //{
+                //    response = "Word does not exist";
+                //}
+                
+
 
                 byte[] data = Encoding.ASCII.GetBytes(response);
                 socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
